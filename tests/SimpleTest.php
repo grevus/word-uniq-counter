@@ -7,7 +7,7 @@ namespace GrevusTest\WordCounter;
  *
  * @package GrevusTest\WordCounter
  */
-class Simple extends \PHPUnit\Framework\TestCase
+class SimpleTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @param $path
