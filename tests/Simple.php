@@ -12,13 +12,13 @@ class Simple extends \PHPUnit\Framework\TestCase
     /**
      * @param $path
      *
-     * @return \Grevus\WordCount\Simple
+     * @return \Grevus\WordCounter\CounterInterface
      */
     protected function getCounter($path)
     {
-        return new \Grevus\WordCount\Simple(
-            new \SplFileInfo($path)
-        );
+        return (new \Grevus\WordCounter\Simple())
+            ->setFile(new \SplFileInfo($path))
+            ;
     }
 
     /**
@@ -30,12 +30,36 @@ class Simple extends \PHPUnit\Framework\TestCase
      */
     public function testCount($path, $result)
     {
-        $counter = $this->getCounter($path);
+        $counter = $this->getCounter($path)
+            ->calculate()
+        ;
 
         $this->assertEquals(
             $result,
             $counter->getCount()
         );
+    }
+
+    /**
+     * @expectedException \LogicException
+     * @expectedExceptionMessage Calculation first
+     */
+    public function testCountError()
+    {
+        $this->getCounter(__DIR__ . '/fixtures/example.txt')
+            ->getCount()
+        ;
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage File not readable
+     */
+    public function testNotFile()
+    {
+        $this->getCounter(__DIR__ . '/fixtures/not_exists_file.txt')
+            ->getCount()
+        ;
     }
 
     /**
@@ -49,5 +73,4 @@ class Simple extends \PHPUnit\Framework\TestCase
             [__DIR__ . '/fixtures/example.txt', 6],
         ];
     }
-
 }
